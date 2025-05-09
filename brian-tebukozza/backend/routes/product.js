@@ -1,5 +1,5 @@
 const express = require('express');
-const Produce = require('../models/Product');
+const Product = require('../models/Product');
 
 const router = express.Router();
 
@@ -30,25 +30,25 @@ router.post('/', async (req, res) => {
         if (productData.quantity === undefined || typeof productData.quantity !== 'number' || productData.quantity < 0) {
             return res.status(400).json({ message: 'Quantity is required and must be a non-negative number.' });
         }
-         if (productData.price === undefined || typeof productData.price !== 'number' || productData.cost < 0) {
-            return res.status(400).json({ message: 'price is required and must be a non-negative number.' });
+        if (!productData.productColor || typeof productData.productColor !== 'string' || productData.productColor.length < 2) {
+            return res.status(400).json({ message: 'Product Color is required and must be a string with at least 2 characters.' });
         }
 
         if (!productData.image || typeof productData.image !== 'object' || !productData.image.data || !(productData.image.data instanceof Buffer) || !productData.image.contentType || typeof productData.image.contentType !== 'string') {
             return res.status(400).json({ message: 'Image data and contentType are required and must be a Buffer and a string respectively.' });
         }
 
-        const newProduce = new Produce(productData);
-        const savedProduce = await newProduce.save();
+        const newProduct = new Product(productData); 
+        const savedProduct = await newProduct.save();
 
-        res.status(201).json(savedProduce);
+        res.status(201).json(savedProduct);
     } catch (err) {
-        console.error('Error creating produce:', err);
+        console.error('Error creating product:', err); 
         if (err.name === 'ValidationError') {
             const errors = Object.values(err.errors).map(el => el.message);
             res.status(400).json({ message: 'Validation Error', errors: errors });
         } else {
-            res.status(500).json({ message: 'Error creating produce', error: err.message });
+            res.status(500).json({ message: 'Error creating product', error: err.message });
         }
     }
 });
