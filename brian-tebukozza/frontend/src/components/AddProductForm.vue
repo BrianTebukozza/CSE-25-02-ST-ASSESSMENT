@@ -3,27 +3,27 @@
     <h3>Add Product</h3>
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
-        <label for="productName">Product Name</label>
+        <label for="productName"></label>
         <input type="text" id="productName" v-model="product.productName" required>
       </div>
       <div class="form-group">
-        <label for="category">Category</label>
+        <label for="category"></label>
         <input type="text" id="category" v-model="product.category" required>
       </div>
       <div class="form-group">
-        <label for="price">Price (UGX)</label>
+        <label for="price"></label>
         <input type="number" id="price" v-model="product.price" required>
       </div>
       <div class="form-group">
-        <label for="quantity">Quantity</label>
+        <label for="quantity"></label>
         <input type="number" id="quantity" v-model="product.quantity" required>
       </div>
       <div class="form-group">
-        <label for="color">Color</label>
+        <label for="color"></label>
         <input type="text" id="color" v-model="product.color">
       </div>
       <div class="form-group">
-        <label for="image">Upload Image</label>
+        <label for="image"></label>
         <input type="file" id="image" @change="handleFileChange" accept="image/*" required>
         <div v-if="imagePreview" class="image-preview">
           <img :src="imagePreview" alt="Image Preview" style="max-width: 100px;">
@@ -51,8 +51,9 @@ export default {
       quantity: null,
       color: '',
       image: null,
-      imagePreview: null,
     });
+
+    const imagePreview = ref(null); // Declare imagePreview as a separate ref
 
     const handleFileChange = (event) => {
       const file = event.target.files[0];
@@ -60,11 +61,11 @@ export default {
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          product.value.imagePreview = e.target.result;
+          imagePreview.value = e.target.result; // Update the separate imagePreview ref
         };
         reader.readAsDataURL(file);
       } else {
-        product.value.imagePreview = null;
+        imagePreview.value = null; // Update the separate imagePreview ref
       }
     };
 
@@ -92,7 +93,7 @@ export default {
       })
       .then(data => {
         console.log('Success:', data);
-        emit('product-added', { ...product.value, id: data.id || Date.now(), imagePreview: product.value.imagePreview }); // Emit with backend ID if available
+        emit('product-added', { ...product.value, id: data.id || Date.now(), imagePreview: imagePreview.value }); // Emit the separate imagePreview
         clearForm();
         // Optionally show a success message to the user
       })
@@ -110,13 +111,13 @@ export default {
         quantity: null,
         color: '',
         image: null,
-        imagePreview: null,
       };
+      imagePreview.value = null; // Reset the separate imagePreview ref
     };
 
     return {
       product,
-      imagePreview,
+      imagePreview, // Return the separate imagePreview ref
       handleFileChange,
       handleSubmit,
       clearForm,
@@ -187,20 +188,20 @@ input[type="file"] {
 }
 
 .save-button {
-  background-color: #2196f3;
+  background-color: #ec7c34;
   color: white;
 }
 
 .save-button:hover {
-  background-color: #1976d2;
+  background-color: #ec7c34;
 }
 
 .clear-button {
-  background-color: #f44336;
+  background-color: #d0cece;
   color: white;
 }
 
 .clear-button:hover {
-  background-color: #d32f2f;
+  background-color: #d0cece;
 }
 </style>

@@ -1,48 +1,49 @@
 <template>
-  <div id="app">
-    <HeaderSection />
-
-    <div class="content-wrapper">
-      <router-view />
+  <div class="add-product-container">
+    <div class="dashboard-container">
+      <Dashboard
+        :sales="50000000"
+        :orders="15000000"
+        :inStock="42000000"
+        :outOfStock="5"
+      />
     </div>
-
-    <FooterSection />
+    <div class="form-table-container">
+      <AddProductForm @product-added="addProduct" />
+      <ProductTable :products="productList" />
+    </div>
   </div>
 </template>
 
-<script>
-import AddProductForm from "./components/AddProductForm.vue";
-import ProductTable from "./components/ProductTable.vue"; 
-import Dashboard from "./components/Dashboard.vue";
+<script setup>
+import AddProductForm from './components/AddProductForm.vue';
+import ProductTable from './components/ProductTable.vue';
+import Dashboard from './components/Dashboard.vue';
+import { ref } from 'vue';
 
-export default {
-  name: "App",
-  components: {
-    AddProductForm,
-    ProductTable,
-    Dashboard, 
-  },
+const productList = ref([ ]);
+
+const addProduct = (newProduct) => {
+  productList.value.push(newProduct);
+  console.log('New Product Added:', newProduct);
 };
 </script>
 
-<style>
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-#app {
+<style scoped>
+.add-product-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  color: #2c3e50;
+  align-items: flex-start;
+  padding: 20px;
 }
 
-.content-wrapper {
-  flex: 1;
-  padding: 20px;
+.dashboard-container {
+  margin-bottom: 20px;
+}
+
+.form-table-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
 }
 </style>

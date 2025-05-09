@@ -29,14 +29,14 @@
       </table>
     </div>
 
-    <div v-if="!loading && !error && produceItems.length === 0" class="message no-data-message">
+    <div v-if="!loading && !error && productItems.length === 0" class="message no-data-message">
         No product registered yet.
      </div>
 
      <Modal v-model="isModalVisible" @close="closeModal">
         <AddProduce
              v-if="!fetchingItemForEdit && !fetchingItemError"
-            :item="itemToEdit"              @produce-saved="handleProduceSaved" @cancel="closeModal"           />
+            :item="itemToEdit"              @product-saved="handleProductSaved" @cancel="closeModal"           />
 
         <div v-else-if="fetchingItemForEdit">Loading item data...</div>
 
@@ -51,14 +51,14 @@
 <script setup>
 import { ref, onMounted, defineExpose } from 'vue';
 import axios from 'axios';
-import AddProductForm from './AddProductForm.vue'; 
+import AddProductForm from './AddProductForm.vue';
 
 const productItems = ref([]);
 const loading = ref(false);
 const error = ref('');
 const isModalVisible = ref(false);
-const itemToEdit = ref(null); 
-const fetchingItemForEdit = ref(false); 
+const itemToEdit = ref(null);
+const fetchingItemForEdit = ref(false);
 const fetchingItemError = ref(null);
 
 
@@ -73,18 +73,17 @@ const fetchProduct = async () => {
     const response = await axios.get(apiUrl);
 
     if (response.data && Array.isArray(response.data)) {
-      produceItems.value = response.data;
-
+      productItems.value = response.data;
     } else {
        console.warn("API response for product list is not an array:", response.data);
        error.value = "Could not load product list (invalid data format).";
-       produceItems.value = [];
+       productItems.value = [];
     }
 
   } catch (err) {
     console.error("Error fetching product list:", err);
     error.value = "Failed to load product list. Please check your connection and try again later.";
-    produceItems.value = [];
+    productItems.value = [];
   } finally {
     loading.value = false;
   }
@@ -100,11 +99,11 @@ const closeModal = () => {
 
 
 onMounted(() => {
-  fetchProduce();
+  fetchProduct();
 });
 
 defineExpose({
-  fetchProduce
+  fetchProduct 
 });
 
 </script>
@@ -116,15 +115,15 @@ defineExpose({
   padding: 2rem;
   background-color: #f5f5f5;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
   font-family: 'Segoe UI', sans-serif;
-  color: #333;
+  color: #ffffff;
   overflow-x: auto;
 }
 
 .produce-table-container h1 {
   text-align: center;
-  color: #333;
+  color: #ffffff;
   margin-bottom: 20px;
   font-weight: 600;
 }
@@ -134,16 +133,6 @@ defineExpose({
   margin-top: 20px;
   padding: 10px;
   border-radius: 5px;
-}
-
-.error.message {
-  color: #D8000C;
-  background-color: #FFD2D2;
-  border: 1px solid #D8000C;
-}
-
-.table-wrapper {
-    overflow-x: auto;
 }
 
 .produce-table {
@@ -181,38 +170,6 @@ defineExpose({
     color: #777;
 }
 
-.action-button {
-    padding: 5px 10px;
-    margin-right: 5px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s ease;
-}
-
-.edit-button {
-    background-color: #196905;
-    color: white;
-}
-
-.edit-button:hover {
-    background-color: #0056b3;
-}
-
-.delete-button {
-    background-color: #dc3545;
-    color: white;
-}
-
-.delete-button:hover {
-    background-color: #c82333;
-}
-
-.action-button:last-child {
-    margin-right: 0;
-}
-
 .no-data-message {
     text-align: center;
     margin-top: 20px;
@@ -220,12 +177,4 @@ defineExpose({
     font-style: italic;
 }
 
-.error-message {
-    color: #D8000C;
-    background-color: #FFD2D2;
-    border: 1px solid #D8000C;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-}
 </style>
