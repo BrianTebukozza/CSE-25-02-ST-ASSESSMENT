@@ -1,30 +1,48 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="app">
+    <HeaderSection />
+
+    <div class="content-wrapper">
+      <router-view />
+    </div>
+
+    <FooterSection />
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script>
+import AddProductForm from "./components/AddProductForm.vue";
+import ProductTable from "./components/ProductTable.vue"; 
+import Dashboard from "./components/Dashboard.vue";
+
+export default {
+  name: "App",
+  components: {
+    AddProductForm,
+    ProductTable,
+    Dashboard, 
+  },
+};
+</script>
+
+<style>
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  color: #2c3e50;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.content-wrapper {
+  flex: 1;
+  padding: 20px;
 }
 </style>
